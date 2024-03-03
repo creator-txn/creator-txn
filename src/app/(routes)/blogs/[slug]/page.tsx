@@ -14,10 +14,10 @@ import { allBlogs, Blog } from "contentlayer/generated";
 import { useMDXComponent } from "next-contentlayer/hooks"; */
 import { Mdx } from "@/app/ui/mdx";
 /* USER INTERFACE | React Components */
-// import ViewCounter from "@/app/ui/view-counter";
+import ViewCounter from "@/app/ui/view-counter";
 /* DATABASE QUERIES |  */
-// import { getViewsCount } from "@/app/db/queries";
-// import { increment } from "@/app/db/actions";
+import { getViewsCount } from "@/app/db/queries";
+import { increment } from "@/app/db/actions";
 
 /* generateStaticParams function 
 - using a fetch request, the requests are automatically memoized.
@@ -91,10 +91,10 @@ export default async function BlogPostPage({
             </time>
             <div className="px-3 d-flex" id="viewCounter">
               {/* JSX code with 'Suspense' for lazy loading the 'Views' component */}
-              {/* <Suspense fallback={<p>Loading...</p>}>
-                Render the 'Views' component with the specified 'slug'
+              <Suspense fallback={<p>Loading...</p>}>
+                {/* Render the 'Views' component with the specified 'slug' */}
                 <Views slug={blog.slug} />
-              </Suspense> */}
+              </Suspense>
             </div>
           </div>
           {/* BLOG CONTENT W/ STYLING */}
@@ -109,16 +109,16 @@ export default async function BlogPostPage({
 }
 
 // Create a cached version of the 'increment' function
-// let incrementViews = cache(increment);
+let incrementViews = cache(increment);
 
-// // Define asynchronous function named 'Views'
-// async function Views({ slug }: { slug: string }) {
-//   // Fetch the current view counts for the specified blog post using 'getViewsCount'.
-//   let views = await getViewsCount();
+// Define asynchronous function named 'Views'
+async function Views({ slug }: { slug: string }) {
+  // Fetch the current view counts for the specified blog post using 'getViewsCount'.
+  let views = await getViewsCount();
 
-//   // Increment the views count using the cached 'increment' function.
-//   incrementViews(slug);
+  // Increment the views count using the cached 'increment' function.
+  incrementViews(slug);
 
-//   // Return the 'ViewCounter' component with the fetched view counts and provided 'slug'.
-//   return <ViewCounter allViews={views} slug={slug} />;
-// }
+  // Return the 'ViewCounter' component with the fetched view counts and provided 'slug'.
+  return <ViewCounter allViews={views} slug={slug} />;
+}

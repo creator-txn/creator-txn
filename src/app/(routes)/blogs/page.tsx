@@ -14,9 +14,9 @@ import { compareDesc, format, parseISO } from "date-fns";
 /* CONTENTLAYER | Generated Blog Content w/ MDX & Built-In Type Support */
 import { allBlogs, Blog } from "contentlayer/generated";
 /* USER INTERFACE | React Components */
-// import ViewCounter from "@/app/ui/view-counter";
+import ViewCounter from "@/app/ui/view-counter";
 /* DATABASE QUERIES |  */
-// import { getViewsCount } from "@/app/db/queries";
+import { getViewsCount } from "@/app/db/queries";
 
 /* METADATA TAGS | [S.E.O] */
 export const metadata: Metadata = {
@@ -67,10 +67,10 @@ function BlogPostPreview(blog: Blog) {
                 {format(parseISO(blog.publishedAt), 'LLLL d, yyyy')}
               </div>
               {/* JSX code with 'Suspense' for lazy loading the 'Views' component */}
-              {/* <Suspense fallback={<p style={{ marginTop: '0.5rem' }}>Loading...</p>}>
-                Render the 'Views' component with the specified 'slug'
+              <Suspense fallback={<p style={{ marginTop: '0.5rem' }}>Loading...</p>}>
+                {/* Render the 'Views' component with the specified 'slug' */}
                 <Views slug={blog.slug} />
-              </Suspense> */}
+              </Suspense>
             </div>
           </time>
           <p>{blog.description}</p>
