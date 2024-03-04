@@ -30,6 +30,44 @@ export async function generateStaticParams() {
   }));
 }
 
+/* FORMAT THE DATE DAY/MONTH/YEAR AGO */
+function formateDate(date: string) {
+  // VAR: Store today's date
+  const currentDate = new Date();
+  // VAR: Store target date
+  const targetDate = new Date(date);
+  // VAR: Get current year - target date year
+  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+  // VAR: Get current month - target date month
+  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+  // VAR: Get current date - target date 
+  const daysAgo = currentDate.getDate() - targetDate.getDate();
+
+  // VAR: String to store the formatted date
+  let formattedDate = "";
+
+  // CONDITIONAL STATEMENT: Checks if today/month/year ago
+  if (yearsAgo > 0) { // CONDITIONAL STATEMENT: Checks if it's more than a year ago
+    formattedDate = `${yearsAgo}y ago`;
+  } else if (monthsAgo > 0) { // CONDITIONAL STATEMENT: Checks if it's more than a month ago
+    formattedDate = `${monthsAgo}mo ago`;
+  } else if (daysAgo > 0) { // CONDITIONAL STATEMENT: Checks if it's more than a day ago
+    formattedDate = `${daysAgo}d ago`;
+  } else { // CONDITIONAL STATEMENT: If none of the above conditions met, it's today
+    formattedDate = 'Today';
+  }
+  
+  // VAR: Get the full date in a human-readable format
+  const fullDate = targetDate.toLocaleString('en-us', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  // Return the formatted date including the human-readable date and the time ago
+  return `${fullDate} (${formattedDate})`;
+}
+
 export default async function BlogPostPage({
   params
 }: {
@@ -86,7 +124,10 @@ export default async function BlogPostPage({
               <div className="d-flex align-items-center mb-4">
                 <VscCalendar style={{ width: '1rem', height: 'auto', marginRight: '0.2rem'}} />
                 <span className="d-none d-md-block pl-3">Published on</span> 
+                {/* BLOG DATE PUBLISHED */}
                 <span className="mx-1">{format(parseISO(blog.publishedAt), 'LLLL d, yyyy')}</span>
+                {/* BLOG PUBLISHED X DAYS AGO */}
+                <span>{formateDate(blog.publishedAt)}</span>
               </div>
             </time>
             <div className="px-3 d-flex" id="viewCounter">
@@ -113,6 +154,7 @@ let incrementViews = cache(increment);
 
 // Define asynchronous function named 'Views'
 async function Views({ slug }: { slug: string }) {
+  
   // Fetch the current view counts for the specified blog post using 'getViewsCount'.
   let views = await getViewsCount();
 
